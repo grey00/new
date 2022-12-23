@@ -1,0 +1,770 @@
+#########
+##Prac1##
+#########
+
+
+#exercise1
+Read the file Table0.txt.
+a)	Change the names of the columns to Name, Age, Height, Weight and Sex.
+b)	Change the row names so that they are the same as Name, and remove the variable Name
+
+x=read.table("Table0.txt")
+x
+View(x)
+colnames(x)=c("name","age","height","weight","sex")
+rownames(x)=x$name
+x
+x$name=NULL
+x
+#also x=x[,-1] for removing the column
+
+
+#ex2
+Read the file Table1.txt, how many rows and columns does it have?
+a) Re-read the file and make the variable Name be the row names and 
+the headers were taken from file. 
+Make sure you read the variable as characters and not as factors.
+
+y=read.table("Table1.txt", header = TRUE)
+y
+View(y)
+nrow(y)
+ncol(y)
+#or
+dim(y)
+z=read.table("Table1.txt",header=TRUE,row.names = "Name",stringsAsFactors = FALSE)
+z
+
+#ex3
+Read the file Table2.txt, watch out for the first line.
+
+y=read.table("Table2.txt",header = TRUE,row.names="Name",skip =2,stringsAsFactors = FALSE )
+y
+
+#ex4
+Read the file Table3.txt, watch out for the first line and the missing values.
+
+a=read.table("Table3.txt",header = TRUE,row.names="Name",skip =2,stringsAsFactors = FALSE,na.strings = c("--","*","**","NA"))
+a
+is.na(a$Age)
+sum(is.na(a))
+
+#ex5
+Read the file states1.csv, the names of the states should be the row names.
+
+b=read.csv("states1.csv")
+b
+View(b)
+rownames(b)=b$X
+b
+b$X=NULL
+b
+View(b)
+#or
+b=read.csv("states1.csv",header = TRUE,row.names = 1)
+b
+
+
+
+#prac1partb
+
+•	Create a vector v with elements: “Weather”, “100”, and dataframe d with two elements: element a is an integer 10, element b is vector v.
+•	Use dump function to store v and d at file “dumpdata.R”.
+v=(“Weather”,”100”) d=data.frame( a=c(10,10), b=v)
+( syntax: dump(c(var1,var2,…),file=”filename”)
+•	Remove object v and d
+•	Use source() function to read object v and d back to memory and print it out
+
+
+#ex1
+v=c("weather","100")
+d=data.frame(a=c(10,10),b=v)
+d
+dump(c("v","d"),file="Dumpdata.R")
+rm(v)
+rm(d)
+source("Dumpdata.R")
+v
+d
+
+#ex2
+2.	Use of Dput() and Dget()
+•	Create a dataframe Students with columns vector of RollNo,Name, Total
+•	Use dput to add it to a file “dputdata.R”
+•	Remove object Students
+•	Use dget() function to read the object
+
+
+Rollno=c("1","2","3")
+Name=c("a","b","c")
+Total=c("10","20","30")
+students=data.frame(Rollno,Name,Total)
+students
+dput(students,file="dputdata.R")
+rm(students)
+dget("dputdata.R")
+
+#ex3 use con read from text file
+3.	Use of Connection to read from text file
+a.	Create   a   text   file   Employee   with   columns Empid, Empname,Designation and Salary and a connection to it using file() function
+b.	Open a file using open() function in read mode # open(con,”r”)
+ 
+c.	Read from connection using read.csv() # data1=read.csv(con)
+d.	Close the connection #close(con)
+
+
+con=file("Employee.txt")
+open(con,"r")
+data=read.csv(con)
+data
+close(con)
+#resd from url
+con=url("http://www.stats.ox.ac.uk/pub/datasets/csb/ch11b.dat")
+x=readLines(con,50)
+x
+#read from gz(zip) file
+con=gzfile("Sample1.gz")
+x=readLines(con,5)
+x
+
+##########
+##prac2A##
+##########
+
+#-->Subset the vector, “mtcars[,2]“, for values greater than “15.0“
+
+mtcars=read.csv("mtcars.csv")
+View(mtcars)
+#subset mtcars
+x=subset(mtcars$mpg,mtcars$mpg>15)
+x
+
+#subset mtcars where mpg>21
+x1=subset(mtcars,mpg>=21)
+x1
+
+#subset mtcars where cyl<6ansd gear=4
+x2=subset(mtcars,cyl<6&gear==4)
+x2
+
+#subset mtcars greater and equal to 21 also select mpg throuh hp
+x3=subset(mtcars,mpg>=21,select=mpg:hp)
+x3
+
+# Subset “airquality” for “Ozone” greater than “28“, or 
+# “Temp” greater than “70“. 
+# Return the first five rows.(head(df,n))
+
+View(airquality)
+df=airquality
+y=subset(df,Ozone>28|Temp>70)
+y
+head(y,5)
+
+# Subset “airquality” for “Ozone” greater than “28“, 
+# and “Temp” greater than “70“. Select the columns, 
+# “Ozone” and “Temp“. Return the first five rows
+
+head(subset(df,Ozone>28&Temp>70,select = c(Ozone,Temp)),5)
+
+#Subset the “airquality” dataframe for rows 
+# without “Ozone” values of “NA“.
+# is.na(col1) !is.na(Ozone)
+
+y1=subset(df,!is.na(Ozone))
+y1
+is.na(y1$Ozone)
+
+#Subset “airquality” for “Ozone” greater than “100“. 
+# Select the columns “Ozone“, “Temp“, “Month” and “Day” only.
+
+y2=subset(df,Ozone>100,select=c(1,4,5,6))
+y2
+
+
+#PRAC2B
+#Exercise 1
+# The format of as.Date(x, ...) accepts 
+# character dates in the format, “YYYY-MM-DD”.
+# For the first exercise, use the c() function, 
+# and as.date(), to convert “2010-05-01” and 
+# “2004-03-15” to class “date” objects. 
+# Set a variable called, “Ex1Dts“.
+
+dates=c("2010-05-01","2004-03-01")
+class(dates)
+
+#ex1 convert vector to date object
+ex1dts=as.Date(dates)
+ex1dts
+class(ex1dts)
+
+#ex2use as.Date to covert to date object inside the variable
+ex2dts=as.Date("09-13-95",format="%m-%d-%y")
+ex2dts
+class(ex2dts)
+
+#ex3 convert the vector to date object within the variable ex3dts
+dates=c("09-13-95","09-13-95","09-13-95","09-13-95")
+ex3dts=as.Date(dates,format="%m-%d-%y")
+class(ex3dts)
+
+#ex4 mean of ex3dts
+m=mean(ex3dts)
+m
+
+#ex5 max of ex3dts
+maxdate=max(ex3dts)
+maxdate
+
+#ex6 diff of two dates
+start_date=as.Date("28/Feb/2020",format="%d/%b/%Y")
+end_date=as.Date("3/Mar/2021",format="%d/%b/%Y")
+end_date-start_date
+
+#ex7print todays date 
+today=format(Sys.Date(),"%B %d %y")
+today
+
+#ex8 obtain current sys time and the difference betwnn time in gmt zone for the same date
+stime=Sys.time()
+stime
+GMT_time=as.POSIXct("2021-01-09 14:54:03",tz="gmt")
+GMT_time
+stime-GMT_time
+
+#########
+##prac3##
+#########
+
+#forloops
+#1
+# Compute the mean of every column in mtcars
+data1=read.csv("mtcars.csv")
+View(data1)
+#create new vector with he same column as mtcars
+mean_data=vector("double",ncol(mtcars))
+mean_data
+
+#names of the column of new vector should be of mtcars
+names(mean_data)=names(mtcars)
+mean_data
+
+for(i in names(mtcars)){
+  mean_data[i]=mean(mtcars[[i]])
+}
+mean_data
+
+
+#2. Determine the type of each column in `flights`.
+data1=read.csv("flights.csv")
+View(data1)
+type_data=vector("list",ncol(data1))
+for(i in colnames(data1)){
+  type_data[[i]]=class(data1[[i]])
+}
+type_data
+
+#3 To compute the number of unique values 
+# in each column of the `iris` dataset
+data("iris")
+iris_uniq=vector("double",ncol(iris))
+names(iris_uniq)=names(iris)
+for(i in names(iris)){
+  iris_uniq[i]=length((unique(iris[[i]])))
+}
+iris_uniq
+
+#4 Generate 10 random numbers from 
+# distributions(normal) with means of
+# -10, 0, 10, and 100.
+
+n=10
+mean_num=c(-10,0,10,100)
+normals=vector("list",length(mean_num))
+for(i in seq_along(normals) ){
+  normals[[i]]=rnorm(n,mean_num[i])
+}
+normals
+
+
+#########
+##prac4##
+#########
+
+# Select the first three columns of the 
+# iris dataset using their column names.
+
+library(dplyr)
+data("iris")
+View(iris)
+df1=iris%>%select(Sepal.Length:Petal.Length)
+df1
+
+# Select all the columns of the iris 
+# dataset except “Petal Width”.
+
+df2=iris%>%select(-(Petal.Width))
+df2
+
+# Select all columns of the iris dataset 
+# that start with the character string “P”.
+
+df3=iris%>%select(starts_with("p"))
+df3
+
+# Find the rows of the iris dataset for Sepal.
+# Length >= 4.6 and Petal.Width >= 0.5 and 
+# select only Sepal.Length,Petal.Width and 
+# Species for the resultant dataframe.
+
+df4=iris%>%filter(Sepal.Length>=4.6&Petal.Width>=0.5)%>%select(c(1,4,5))
+df4
+
+# Select three columns from iris and 
+# arrange rows by the ascending order Sepal.
+# Length followed by descending order of Sepal.Width . 
+# HINT: Use arrange().
+
+df5=iris%>%select(1,2,3)%>%arrange(Sepal.Length,desc(Sepal.Width))
+df5
+
+# Create a new column called proportion, 
+# which is the ratio of Sepal.Length to Sepal.Width. 
+# HINT: Use mutate().
+
+df6=iris%>%mutate(proportion=Sepal.Length/Sepal.Width)
+df6
+
+# Compute the average number of Sepal.Length, 
+# apply the mean() function to the
+# column Sepal.Length, and call the summary value 
+# “avg_slength”. HINT: Use summarise().
+
+df7=iris%>%summarise(avg_slength=mean(Sepal.Length))
+df7
+
+# Split the iris data frame by the Sepal.Length, 
+# then ask for the same summary statistics as above. 
+# HINT: Use group_by() and display total no of each entry.
+
+df8=iris%>%group_by(Sepal.Length)%>%summarise(no_of_entry=n())
+df8
+
+
+#########
+##prac5##
+#########
+
+#ex1
+# Create a function that given a data frame and a vector, 
+# will add the vector (if the vector length match with the 
+# rows number of the data frame) as a new variable to the data frame.
+# Create a student data frame with 10 roll numbers and 10 names, 
+# and two vectors with 10 marks and 8 marks , and test the function.
+
+ex1=function(df,v1)
+  {
+  if(length(v1)==nrow(df)){
+    df=cbind(df,v1)
+  return(df)
+  }
+  else
+    print("column not added unmatched rows")
+}
+roll_no=c('1','2','3','4','5','6','7','8','9','10')
+names=c('aa','bb','cc','dd','ee','ff','gg','hh','ii','jj')
+student=data.frame(roll_no,names)
+student
+marks1=c('45','67','32','54','57','28','93','21','32','09')
+marks2=c('65','78','54','23','76','32','34','88')
+newstudent=ex1(student,marks1)
+newstudent
+
+
+#ex2
+# Consider a data frame df:
+# Id=c(1:10) Age=c(14,12,15,10,23,21,41,56,78,12) 
+# Sex=c('F','M','M','F','M','F','M','M','F','M')
+# Code=letters[1:10] df=data.frame(Id,Age,Sex,Code)
+# Create a function that, given a data frame and two indexes, 
+# exchanges two values of the Code variable with each other.
+# For example, if the index is 1 and 3, 
+# then code of first row is swapped with code of 3rd row
+
+id=c(1:10)
+age=c(14,12,15,10,23,21,41,56,78,12)
+sex=c('f','m','m','f','m','f','m','m','m','f')
+code=letters[1:10]
+df=data.frame(id,age,sex,code)
+df
+fun=function(df1,i1,i2)
+{
+  temp=df[i1,"code"]
+  df[i1,"code"]=df[i2,"code"]
+  df[i2,"code"]=temp
+  return(df)
+  
+}
+fun(df,3,8)
+
+#ex3
+# Consider two variables x,y and a data frame df:
+# x,y integer A=c(1:10) B=seq(100,10,-10)
+# H=seq(-200,-50,along.with=B) df=data.frame(A,B,H)
+# Create a function that given a data frame 
+# df calculate a new variable ‘SUM_x_y'(If x=2 
+# and y=3, then the new variable will be ‘SUM_2_3’,
+# if x=4 and y=10, then the new variable will be 
+# ‘SUM_4_10’),such that for each row ‘i’ is equal to: sum(x*df[1:i,1])+sum(y*df[1:i,2])
+
+A=c(1:10)
+B=seq(100,10,-10)
+H=seq(-200,-50,along.with = B)
+df=data.frame(A,B,H)
+fun1=function(df1,x,y){
+  for (i in seq_len(nrow(df))){
+    df[i,4]=sum(x*df[1:i,1])+sum(y*df[1:i,2])
+  }
+  names(df)[4]=paste("SUM",x,y,sep = "_")
+  df
+}
+fun1(df,3,10)
+
+#ex4
+# Create a function to create an employee data frame 
+# (Name,Gender,Age,Designation, Department & SSN) 
+# and return the Name,Age & Designation of all employees
+
+name=c('a','b','c')
+gender=c('f','m','f')
+age=c('18','19','20')
+designation=c('aa','bb','cc')
+ssn=c('tt','yy','uu')
+
+fun=function(name,gender,age,designation,ssn){
+  employee=data.frame(name,gender,age,designation,ssn)
+  employee
+  employee[,c(2,3,5)]
+}
+fun(name,gender,age,designation,ssn)
+
+#ex5
+# Write a function to accept a dataframe and 
+# replace NA values of all numeric columns with mean of the column.
+
+meanvalue=function(df1){
+  for(i in seq_len(ncol(df1))){
+    if(is.numeric(df1[,i])){
+      mn=mean(df1[,i],na.rm=TRUE)
+      for(j in seq_len(nrow(df1))){
+        if(is.na((df1[[i]][[j]])))
+          df1[[i]][[j]]=mn
+      }
+    }
+  }
+  df1
+}
+df=student
+df
+df[2,2]=NA
+df[8,1]=NA
+df
+meanmarks=mean(df[,1],na.rm = TRUE)
+meanmarks
+x=meanvalue(df)
+x
+df
+
+student$roll_no=as.numeric(student$roll_no)
+
+str(student)
+
+
+#########
+##prac6##
+#########
+
+#1
+# Use the following functions on any data set : 
+# lapply(), split(), sapply(), apply(), tapply()
+# 1.	Use of apply() Syntax: apply(x, MARGIN=1, FUN=my.fun), 
+# to apply my.fun() across rows of a matrix or data frame 
+# x apply(x, MARGIN=2, FUN=my.fun), to apply my.fun() 
+# across columns of a matrix or data frame x
+
+View(state.x77)
+x=apply(state.x77,MARGIN = 2,min)
+x
+y=apply(state.x77,MARGIN = 2,max)
+y
+z=apply(state.x77,MARGIN = 2,which.max)
+z
+t=apply(state.x77,MARGIN = 2,summary)
+t
+x=matrix(rnorm((9)),3,3)
+rowSums(x)
+colSums(x)
+rowMeans(x)
+colMeans(x)
+x1=apply(x,MARGIN = 1,max.col)
+x1
+
+
+# 2.	Use of lapply() Syntax: lapply(x, FUN=my.fun)
+# •	Consider the list list1 <- list(observationA = c(1:5, 7:3), 
+# observationB=matrix(1:6, nrow=2)) and perform the following
+# list1=list(observationA=c(1:5,7:3),observationB=matrix(1:6,nrow=2))
+# list1
+
+x=lapply(list1,length)
+x
+x1=lapply(list1,sum)
+x1
+x2=lapply(list1,quantile)
+x2
+x3=lapply(list1,class)
+x3
+x4=lapply(list1,unique)
+x4
+unlist(lapply(list1,print))
+
+
+#3 Use of sapply() Syntax: sapply(x,fun=myfunc(),threshold=xx)
+# Write a function that checks if a value is above a threshold value. 
+# The function should have two parameters: x which is the numeric 
+# value to check, and threshold which is the numeric threshold. 
+# Have the function return a logical value, TRUE if the value 
+# is above the threshold and FALSE if it is equal to or below 
+# the threshold( need to take care of NA values) and use the sapply() 
+# function to find out how many days had ozone value above 23 in the 
+# airquality dataset.[ data(airquality)] ( hint: To count the number 
+# of TRUEs call the sum( ) function on the result of sapply.)
+
+myfunc=function(x,y){
+  if(is.na(x))
+    {
+    return (FALSE)
+  }
+  if(x>y)
+   { 
+    return (TRUE)
+  }
+  else
+    {
+      return (FALSE)
+    }}
+View(airquality)
+x1=sapply(airquality$Ozone,myfunc,y=23)
+x1
+x2=sum(sapply(airquality$Ozone,myfunc,y=23))
+x2
+
+#4
+# Use of split() split(x, f=my.index)
+# Split  up  the  state.x77  matrix  according  to  
+# region (Convert  to dataframe before splitting using data.frame() 
+# and use the f value for splitting as inbuilt state.region factor) 
+# and for each region, display the first 3 rows of the data frame 
+# using lapply.( Use head function with a parameter of 3 passed as third argument of lapply)
+
+x=data.frame(state.x77)
+x1=split(x,state.region)
+x2=lapply(x1,head,3)
+x2
+
+
+#5
+# Use of tapply() Syntax: tapply(x, INDEX=my.index, FUN=my.fun)
+# Compute the mean and sd of the Frost variable, within each 
+# region of state.x77 dataset (Hint: 1.refer to the Frost column 
+# as either state.x77[,”Frost”] or convert state.x77 to a dataframe df and refer to it as df$Frost
+2.	use inbuilt factor state.region as index for splitting
+
+x=data.frame(state.x77)
+t1=tapply(x$Frost,state.region,mean)
+t1
+t2=tapply(x$Frost,state.region,sd)
+t2
+
+
+#########
+##prac7##
+#########
+
+
+#1
+# Generating random numbers. Set your seed to 1 and generate 10 random numbers using runif and save it in an object called random_numbers.Using the function ifelse and the
+# object random_numbers simulate coin tosses. (Hint:
+# If random_numbers is bigger than .5 then the result is head, otherwise is tail.)
+
+set.seed(1)
+random_numbers=runif(10)
+random_numbers
+coin_tosses_1=ifelse(random_numbers>.5,'head','tail')
+coin_tosses_1
+sum(coin_tosses_1=='tail')
+
+#2
+# Simulate an experiment of throwing one dice 30 times using the function rmultinom, and find out how many 6’s are in the simulated
+# sample and also Obtain a vector that shows how many 1’s, 2’s,….6’s wereobtained in the simulation.
+
+set.seed(1)
+(dice_result=rmultinom(n = 30,size = 1,prob = rep(1/6,6)))
+sum(dice_result[6,]==1)
+dice_vector=apply(dice_result,1,function(x){
+  sum(x==1)
+})
+dice_vector
+names(dice_vector)=c("1s","2s","3s","4s","5s","6s")
+
+#3
+# Exercise 3 Simulate normal distribution values. Imagine a population in which the average height is 1.70 m with a standard deviation of 0.1. Use rnorm to simulate the height of 1000 people and save it in an object called heights.
+# a)	Plot the density of the simulated values.
+# b)	Generate 10000 values with the same parameters and plot the respective density function on top of the previous plot in red to differentiate it.
+# c)	What’s the probability that a person will be smaller or equal to 1.90 m ? Use pnorm
+# d)	What’s the probability that a person will be taller or equal to 1.60 m? Use pnorm
+
+heights=rnorm(1000,1.70,0.1)
+heights
+#a
+plot(density(heights),main="simulating heights")
+#b
+set.seed(1)
+heights2=rnorm(1000,1.70,0.1)
+heights2
+lines(density(heights2),col="red",lwd=2)
+#c
+pnorm(1.90,1,70,0.1)
+#d
+1-pnorm(1.60,1.70,0.1)
+
+#4
+# The waiting time (in minutes) at a doctor’s clinic follows an exponential distribution with a rate parameter of 1/50. Use the function rexp to simulate the waiting time of 30 people at the doctor’s office.
+# What’s the probability that a person will wait less than 10 minutes? Use pexp
+# What’s the waiting time average?
+
+set.seed(1)
+patients=rexp(rate = 1/50,n=30) #random no gneration in exp
+patients
+pexp(q=10,rate = 1/50)#probablty
+qexp(.5,rate = 1/50) #quantile
+
+
+#########
+##prac8##
+#########
+
+#1)Write a program to build a regression model 
+# on happiness as a function of income and visualize univariate linear regression on it.  
+
+income.data=read.csv("income.data.csv")
+View(income.data)
+incomelm=lm(formula = happiness~income,income.data)
+summary(incomelm)
+library(ggplot2)
+library(ggpubr)
+income.graph=ggplot(income.data,aes(x=income,y=happiness ))+geom_point()
+income.graph
+income.graph=income.graph+geom_smooth(method = lm,col="black")
+income.graph=income.graph+stat_regline_equation(label.x = 3,label.y = 4)
+income.graph+theme_bw()+labs(title="reported happiness as a function of income",x="income(x$10,000)", y="happiness score (0 to 10)")
+
+#2 Write a program to simulate linear model for Systolic Blood Pressure 
+# measurement verses Age. Also predict the SBP of a person of Age 53 from the model
+ 
+BP= read.csv("BP.csv")
+View(BP)
+names(BP)=c("age","SBP")
+head(BP)
+#creating a dataset for predicting values
+p=as.data.frame(20)
+names(p)="age"
+p
+model=lm(SBP~age,data=BP)
+summary(model)
+predict(model,newdata=p)
+bp.graph=ggplot(BP,aes(x=age,y=SBP))+geom_point()+xlim(20,100)
+bp.graph
+bp.graph=bp.graph+geom_smooth(method = "lm",col="black")
+bp.graph=bp.graph+stat_regline_equation(label.x = 20,label.y = 160)
+bp.graph+theme_bw()+labs(title="reported sbp as a function of age",x="age(in years)",y="systolic BP")
+
+
+##############
+##Assignment##
+##############
+
+1. Import the built in MASS package .Considerdata frame Pima.tr2 
+# (predefined in MASS), determine the number of missing values in each column of the data frame
+
+library(MASS)
+data("Pima.tr2")
+apply(Pima.tr2, 2, function(x) {sum(is.na(x))})
+
+# Use the functions mean() to find the mean of:
+
+numbers= c(10,20,30,40,NA,50,NA,60)
+mean(numbers[!is.na(numbers)])
+
+# (b) the sample of 50 random normal values that can be 
+# generated from a normal distribution with mean 0 and variance 1 
+
+mean(rnorm(50,0,1))
+
+# (c) the columns height and weight in the built in data frame women.
+
+data("women")
+apply(women,2, function(x){mean(x)})
+
+# 3. Install and import DAAG package .Extractthe following subsets 
+# from the data frame ais (Australian athletes data set) predefined in DAAG
+
+library(DAAG)
+data("ais")
+View(ais)
+
+# (a) Extract the data for the rowers.
+ais[ais$sport=='Row',]
+
+#(b) Extract the data for the rowers, the netballers and the tennis players
+ais[is.element(ais$sport,c('Row','Netball','Tennis')),]
+
+# (c) Extract the data for the female basketballers and rowers
+ais[ais$sex=='f' & (ais$sport=='B_Ball'|ais$sport=='Row'),]
+
+# 4. Consider a dataframe of Employees with columns 
+# (empid,empname,dept,designation,basicpay), 
+# write R statements with pipe to create new columns DA 
+# (80% of basicpay),HRA(40% of basicpay),TA(20% of basicpay ) and 
+# TotalSalary(basicpay+DA+HRA+TA).Display only the columns 
+# empid and TotalSalary.(Use dplyr package)
+
+empid=c(111,222,333,444,555)
+empname=c("kiran","shahruk","salman","amir","kajol")
+dept=c("Marketing","Operations","Finance","Sales","Human Resource")
+designation=c("Chief Marketing","Chief Operating","Chief Financial","Chief Executive","Intern")
+basicpay=c(25000,30000,45000,35000,55000)
+employees=data.frame(empid,empname,dept,designation,basicpay)
+View(employees)
+
+
+employees=employees %>% mutate(DA=(employees$basicpay*0.8))
+employees=employees %>% mutate(HRA=(employees$basicpay*0.4))
+employees=employees %>% mutate(TA=(employees$basicpay*0.2))
+employees=employees %>% mutate(TotalSalary=(employees$basicpay+employees$DA+employees$HRA+employees$TA))
+View(employees)
+
+# 5. Given a list x =list(c(1,2,3),c(4,5,6),c(7,8,9)) , 
+# write a lapply statement to obtain x1 by applying a 
+# user defined function to find the products of each element 
+# of list x.(use anonymous function with prod() function )
+
+library(matlab)
+x=list(c(1,2,3),c(4,5,6),c(7,8,9))
+x
+x1=lapply(x,prod)
+x1
+
+
+
